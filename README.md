@@ -134,5 +134,81 @@ sudo apt install -y libsgx-enclave-common libsgx-enclave-common-dev libsgx-urts 
 
 ```
 
+Note that sometimes after a system reboot you'll need to reinstall the driver (usually after a kernel upgrade):
 
+```bash
+sudo $HOME/.sgxsdk/sgx_linux_x64_driver_*.bin
+```
+
+# Testing your SGX setup
+
+1. For node runners, by using `sgx-detect`:
+
+   ```bash
+   sudo apt install -y libssl-dev protobuf-compiler
+   
+   #Install openssl
+   sudo apt-get install -y pkg-config
+  
+   cargo +nightly install fortanix-sgx-tools sgxs-tools
+
+   sgx-detect
+   ```
+
+   Should print at the end:
+
+   ```
+   ✔  Able to launch enclaves
+      ✔  Debug mode
+      ✔  Production mode (Intel whitelisted)
+
+   You're all set to start running SGX programs!
+   ```
+
+2. Clone the Rust SGX SDK repo:
+
+   ```bash
+   # clone the rust-sgx-sdk baidu sdk
+   RUN git clone --depth 1  -b v1.0.9 https://github.com/apache/incubator-teaclave-sgx-sdk sgx
+
+   ```
+
+   *Note: This setup assumes that you run the above command in your $HOME folder, and thus you have the above repo cloned at $HOME/sgx. If you clone it anywhere else, update Line 24 of the [Makefile](safetrace/Makefile) accordingly:*
+
+   ```make
+   SGX_SDK_RUST ?= $(HOME)/sgx
+   ```
+
+# Uninstall
+
+To uninstall the Intel(R) SGX Driver, run:
+
+```bash
+sudo /opt/intel/sgxdriver/uninstall.sh
+```
+
+The above command produces no output when it succeeds. If you want to verify that the driver has been uninstalled, you can run the following, which should print `SGX Driver NOT installed`:
+
+```bash
+ls /dev/isgx &>/dev/null && echo "SGX Driver installed" || echo "SGX Driver NOT installed"
+```
+
+To uninstall the SGX SDK, run:
+
+```bash
+sudo "$HOME"/.sgxsdk/sgxsdk/uninstall.sh
+rm -rf "$HOME/.sgxsdk"
+```
+
+To uninstall the rest of the dependencies, run:
+
+```bash
+sudo apt purge -y libsgx-enclave-common libsgx-enclave-common-dev libsgx-urts sgx-aesm-service libsgx-uae-service libsgx-launch libsgx-aesm-launch-plugin libsgx-ae-le
+```
+
+# References
+
+This file was forked from the **enigmampc/SecretNetwork** repo:
+[docs/validators-and-full-nodes/setup-sgx.md](https://github.com/enigmampc/SecretNetwork/blob/master/docs/validators-and-full-nodes/setup-sgx.md)
+The two notable differences are as follows:
 
