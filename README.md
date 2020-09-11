@@ -3,9 +3,7 @@
 
 ## Hardware
 
-1. Go to your BIOS menu
-2. Enable SGX (Software controlled is not enough)
-3. Disable Secure Boot
+VM: Confidential Compute Instance - SGX-capable computer host with SGX enabled in the BIOS - Azure-DC1s*
 
 ## Software
 
@@ -233,9 +231,37 @@ make
 cd bin
 ./safetrace-app
 ```
+
+# Errors You may come across
+
+- When you first run the make file you might get an error which tells you "error[E0658]: `cfg(doctest)` is experimental and subject to change
+"
+To fix this you need to:
+```
+cd $HOME/.cargo/registry/src/github.com-1ecc6299db9ec823/remove_dir_all-0.5.3/src
+nano lib.rs
+``` 
+then add ``` #![feature(cfg_doctest)]``` at the top of the script.
+
+- Another error which you may come across is a "clang" error. This can be fixed by installing the following packages:
+Install llvm:
+```
+$ wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+$ sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-6.0 main"
+$ sudo apt update && sudo apt install clang-6.0
+$ sudo ln -s /usr/bin/llvm-config-6.0 /usr/local/bin/llvm-config
+$ sudo apt-get install -y zlib1g-dev
+```
+
+Install protobuf:
+```
+$ wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protoc-3.6.1-linux-x86_64.zip
+$ unzip protoc-3.6.1-linux-x86_64.zip -d protoc3
+$ sudo mv protoc3/bin/* /usr/local/bin/
+$ sudo mv protoc3/include/* /usr/local/include/
+```
+
 # References
 
-This file was forked from the **enigmampc/SecretNetwork** repo:
-[docs/validators-and-full-nodes/setup-sgx.md](https://github.com/enigmampc/SecretNetwork/blob/master/docs/validators-and-full-nodes/setup-sgx.md)
-The two notable differences are as follows:
+This file was forked from the **enigmampc/SafeTrace** repo:
 
