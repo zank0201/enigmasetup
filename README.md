@@ -1,12 +1,13 @@
-# enigmasetup
+# Enigma Setup
 
-# Hardware
+
+## Hardware
 
 1. Go to your BIOS menu
 2. Enable SGX (Software controlled is not enough)
 3. Disable Secure Boot
 
-# Software
+## Software
 
 First, make sure you have Rust installed: https://www.rust-lang.org/tools/install
 
@@ -206,6 +207,32 @@ To uninstall the rest of the dependencies, run:
 sudo apt purge -y libsgx-enclave-common libsgx-enclave-common-dev libsgx-urts sgx-aesm-service libsgx-uae-service libsgx-launch libsgx-aesm-launch-plugin libsgx-ae-le
 ```
 
+# SafeTrace
+
+- Clone SafeTrace's repository
+```
+git clone https://github.com/enigmampc/covid-self-reporting.git
+
+```
+
+- Move into enclave/safetrace subfolder:
+
+```
+cd covid-self-reporting/enclave/safetrace
+```
+
+- Compile the Code 
+```
+make
+```
+
+
+- Run the enclave code
+
+```
+cd bin
+./safetrace-app
+```
 # References
 
 This file was forked from the **enigmampc/SecretNetwork** repo:
